@@ -3,51 +3,15 @@
 #include <math.h>
 #include "ListaSondas.h"
 #include <time.h>
+
 #define PESO_MAXIMO 40
 int minhaVariavelGlobal = 1;
 
-void avaliaCombinacao(ListaRochas* lista, int combinacao, float* valorTotal, float* pesoTotal) {
-    *valorTotal = 0;
-    *pesoTotal = 0;
-    for (int i = 0; i < lista->tamanho; i++) {
-        if (combinacao & (1 << i)) { // Verifica se o i-ésimo bit está ativo
-            *valorTotal += lista->vetor[i].valorRocha;
-            *pesoTotal += lista->vetor[i].pesoRocha;
-        }
-    }
-}
-
-// Função principal para encontrar a melhor combinação de rochas
-void encontraMelhoresRochas(ListaRochas* lista) {
-    int melhorCombinacao = 0;
-    float melhorValor = 0;
-
-    int totalCombinacoes = (1 << lista->tamanho); // 2^tamanho
-
-    for (int combinacao = 0; combinacao < totalCombinacoes; combinacao++) {
-        float valorAtual, pesoAtual;
-        avaliaCombinacao(lista, combinacao, &valorAtual, &pesoAtual);
-
-        if (pesoAtual <= PESO_MAXIMO && valorAtual > melhorValor) {
-            melhorValor = valorAtual;
-            melhorCombinacao = combinacao;
-        }
-    }
-
-    // Imprime os índices da melhor combinação
-    printf("Melhor combinação de rochas:\n");
-    for (int i = 0; i < lista->tamanho; i++) {
-        if (melhorCombinacao & (1 << i)) {
-            printf("Rocha %d (Valor: %.2f, Peso: %.2f)\n", i, lista->vetor[i].valorRocha, lista->vetor[i].pesoRocha);
-        }
-    }
-    printf("Valor total: %.2f\n", melhorValor);
-}
 
 
 int main(){
 
-        clock_t inicio = clock();
+    clock_t inicio = clock();
     SondaMarte sonda1;
     listaSonda sondasL;
     ListaRochas compartimentoL;
@@ -76,12 +40,15 @@ int main(){
     }
     ImprimeCompartimento(&compartimentoL);
 
+    melhor_rocha(&compartimentoL);
+
+   
+    ImprimeCompartimento(&compartimentoL);
+
     clock_t fim = clock();
-    double tempo_decorrido = (double)(fim - inicio);
+    double tempo_decorrido = (double)(fim - inicio) / 1000000;
     printf("Tempo gasto: %f segundos\n", tempo_decorrido);
     printf("\n"); 
-
-    encontraMelhoresRochas(&compartimentoL);
 
     return 0;
 }
